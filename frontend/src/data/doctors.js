@@ -16,7 +16,7 @@ export const mockDoctors = [
     availableDays: ['Monday', 'Tuesday', 'Wednesday', 'Friday'],
     availableTime: '9:00 AM - 5:00 PM',
     bio: 'Specializes in interventional cardiology and heart failure management. Expert in complex cardiac procedures.',
-    avatar: 'https://i.pravatar.cc/150?img=9'
+    avatar: '/doctors/doc1.jpg'
   },
   {
     id: 'D002',
@@ -34,7 +34,7 @@ export const mockDoctors = [
     availableDays: ['Monday', 'Wednesday', 'Thursday', 'Saturday'],
     availableTime: '10:00 AM - 6:00 PM',
     bio: 'Expert in minimally invasive cardiac procedures and advanced imaging techniques for heart disease diagnosis.',
-    avatar: 'https://i.pravatar.cc/150?img=13'
+    avatar: '/doctors/doc2.jpg'
   },
   {
     id: 'D003',
@@ -52,7 +52,7 @@ export const mockDoctors = [
     availableDays: ['Tuesday', 'Thursday', 'Friday'],
     availableTime: '9:00 AM - 3:00 PM',
     bio: 'Specializes in congenital heart defects and pediatric cardiac care with a compassionate approach.',
-    avatar: 'https://i.pravatar.cc/150?img=45'
+    avatar: '/doctors/doc3.jpg'
   },
   {
     id: 'D004',
@@ -70,7 +70,7 @@ export const mockDoctors = [
     availableDays: ['Monday', 'Tuesday', 'Thursday', 'Friday'],
     availableTime: '8:00 AM - 4:00 PM',
     bio: 'Expert in treating complex neurological disorders including epilepsy, stroke, and movement disorders.',
-    avatar: 'https://i.pravatar.cc/150?img=12'
+    avatar: '/doctors/doc4.jpg'
   },
   {
     id: 'D005',
@@ -88,7 +88,7 @@ export const mockDoctors = [
     availableDays: ['Monday', 'Wednesday', 'Friday'],
     availableTime: '7:00 AM - 3:00 PM',
     bio: 'Specializes in minimally invasive brain and spine surgery with cutting-edge robotic technology.',
-    avatar: 'https://i.pravatar.cc/150?img=47'
+    avatar: '/doctors/doc5.jpg'
   },
   {
     id: 'D006',
@@ -106,7 +106,7 @@ export const mockDoctors = [
     availableDays: ['Tuesday', 'Wednesday', 'Thursday', 'Saturday'],
     availableTime: '9:00 AM - 5:00 PM',
     bio: 'Expert in joint replacement surgery and sports medicine with focus on rapid recovery protocols.',
-    avatar: 'https://i.pravatar.cc/150?img=14'
+    avatar: '/doctors/doc6.jpg'
   },
   {
     id: 'D007',
@@ -124,7 +124,7 @@ export const mockDoctors = [
     availableDays: ['Monday', 'Tuesday', 'Friday', 'Saturday'],
     availableTime: '10:00 AM - 6:00 PM',
     bio: 'Specializes in athletic injury prevention and treatment, helping athletes return to peak performance.',
-    avatar: 'https://i.pravatar.cc/150?img=48'
+    avatar: '/doctors/doc7.jpg'
   },
   {
     id: 'D008',
@@ -142,7 +142,7 @@ export const mockDoctors = [
     availableDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     availableTime: '8:00 AM - 6:00 PM',
     bio: 'Experienced family physician providing comprehensive primary care for patients of all ages.',
-    avatar: 'https://i.pravatar.cc/150?img=15'
+    avatar: '/doctors/doc8.jpg'
   },
   {
     id: 'D009',
@@ -160,7 +160,7 @@ export const mockDoctors = [
     availableDays: ['Monday', 'Wednesday', 'Thursday', 'Friday'],
     availableTime: '9:00 AM - 5:00 PM',
     bio: 'Expert in medical and cosmetic dermatology with focus on advanced skin cancer treatments.',
-    avatar: 'https://i.pravatar.cc/150?img=44'
+    avatar: '/doctors/doc9.jpg'
   },
   {
     id: 'D010',
@@ -178,6 +178,99 @@ export const mockDoctors = [
     availableDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     availableTime: '8:00 AM - 4:00 PM',
     bio: 'Compassionate pediatrician dedicated to providing comprehensive care for children and adolescents.',
-    avatar: 'https://i.pravatar.cc/150?img=51'
+    avatar: '/doctors/doc10.jpg'
+  },
+  {
+    id: 'D011',
+    firstName: 'Elizabeth',
+    lastName: 'Wong',
+    specialization: 'Ophthalmology',
+    department: 'Ophthalmology',
+    qualification: 'MD, FACS',
+    experience: '16 years',
+    email: 'elizabeth.wong@cloudcare.com',
+    phone: '+1 (555) 789-0123',
+    rating: 4.8,
+    patients: 1450,
+    consultationFee: 140,
+    availableDays: ['Monday', 'Tuesday', 'Thursday'],
+    availableTime: '9:00 AM - 5:00 PM',
+    bio: 'Specialist in cataract and refractive surgery, committed to restoring and preserving vision.',
+    avatar: '/doctors/doc11.jpg'
+  },
+  {
+    id: 'D012',
+    firstName: 'Andrew',
+    lastName: 'Sato',
+    specialization: 'Endocrinology',
+    department: 'Endocrinology',
+    qualification: 'MD, FACE',
+    experience: '14 years',
+    email: 'andrew.sato@cloudcare.com',
+    phone: '+1 (555) 890-1234',
+    rating: 4.9,
+    patients: 920,
+    consultationFee: 155,
+    availableDays: ['Wednesday', 'Thursday', 'Friday'],
+    availableTime: '10:00 AM - 6:00 PM',
+    bio: 'Expert in diabetes management and thyroid disorders, focusing on personalized hormonal health.',
+    avatar: '/doctors/doc12.jpg'
+  },
+  {
+    id: 'D013',
+    firstName: 'Sarah',
+    lastName: 'Mitchell',
+    specialization: 'Psychiatry',
+    department: 'Psychiatry',
+    qualification: 'MD, PhD',
+    experience: '15 years',
+    email: 'sarah.mitchell@cloudcare.com',
+    phone: '+1 (555) 901-2345',
+    rating: 4.9,
+    patients: 800,
+    consultationFee: 180,
+    availableDays: ['Monday', 'Tuesday', 'Friday'],
+    availableTime: '11:00 AM - 7:00 PM',
+    bio: 'Dedicated to mental health wellness, specializing in anxiety, depression, and cognitive behavioral therapy.',
+    avatar: '/doctors/doc13.jpg'
+  },
+  {
+    id: 'D014',
+    firstName: 'Jessica',
+    lastName: 'Miller',
+    specialization: 'Oncology',
+    department: 'Oncology',
+    qualification: 'MD, FACO',
+    experience: '19 years',
+    email: 'jessica.miller@cloudcare.com',
+    phone: '+1 (555) 012-3456',
+    rating: 4.8,
+    patients: 1150,
+    consultationFee: 200,
+    availableDays: ['Tuesday', 'Wednesday', 'Thursday'],
+    availableTime: '8:00 AM - 4:00 PM',
+    bio: 'Renowned oncologist providing compassionate care and advanced treatment plans for cancer patients.',
+    avatar: '/doctors/doc14.jpg'
+  },
+  {
+    id: 'D015',
+    firstName: 'William',
+    lastName: 'Davis',
+    specialization: 'Urology',
+    department: 'Urology',
+    qualification: 'MD, FACS',
+    experience: '13 years',
+    email: 'william.davis@cloudcare.com',
+    phone: '+1 (555) 123-6789',
+    rating: 4.7,
+    patients: 1020,
+    consultationFee: 160,
+    availableDays: ['Monday', 'Wednesday', 'Friday'],
+    availableTime: '9:00 AM - 5:00 PM',
+    bio: 'Expert urologist treating a wide range of urinary tract and reproductive system conditions.',
+    avatar: '/doctors/doc15.jpg'
   }
 ];
+
+
+

@@ -23,49 +23,83 @@ const Doctors = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [docsRes, deptsRes] = await Promise.all([
+        const [docsResult, deptsResult] = await Promise.allSettled([
           doctorsAPI.getAll(),
           departmentsAPI.getAll()
         ]);
 
-        const rawDocs = docsRes.data;
-        const apiDoctors = Array.isArray(rawDocs) ? rawDocs : (rawDocs.data || []);
+        // Handle Doctors Data
+        if (docsResult.status === 'fulfilled') {
+          const rawDocs = docsResult.value.data;
+          const apiDoctors = Array.isArray(rawDocs) ? rawDocs : (rawDocs.data || []);
 
-        // Merge API data with mock data for rich UI
-        const mergedDoctors = apiDoctors.map(doc => {
-          // Try to find a matching mock doctor or use a fallback
-          const mockDoc = mockDoctors.find(m =>
-            (m.firstName === doc.firstName && m.lastName === doc.lastName) ||
-            m.specialization === doc.specialization
-          ) || mockDoctors[0];
+          if (apiDoctors.length === 0) {
+            console.log('No doctors in API, using mock data');
+            setDoctors(mockDoctors);
+          } else {
+            // Prepare a pool of professional avatars
+            const professionalAvatars = [
+              ...mockDoctors.map(d => d.avatar),
+              '/doctors/doc16.jpg',
+              '/doctors/doc17.jpg',
+              '/doctors/doc18.jpg',
+              '/doctors/doc19.jpg',
+              '/doctors/doc20.jpg'
+            ];
 
-          return {
-            ...mockDoc, // Default to mock data (avatar, bio, fees)
-            ...doc,    // Override with real API data (name, email, phone, etc.)
+            // Merge API data with mock data
+            const mergedDoctors = apiDoctors.map((doc, index) => {
+              const matchedMockDoc = mockDoctors.find(m =>
+                (m.firstName === doc.firstName && m.lastName === doc.lastName) ||
+                m.specialization === doc.specialization
+              );
 
-            // Explicit mappings for API -> UI field differences
-            patients: doc.totalPatients || mockDoc.patients,
-            qualification: doc.qualifications ? doc.qualifications.join(', ') : mockDoc.qualification,
-            experience: doc.experience ? `${doc.experience} years` : mockDoc.experience,
+              const mockDoc = matchedMockDoc || mockDoctors[0];
 
-            // Ensure visual assets exist
-            avatar: doc.avatar || mockDoc.avatar || 'https://via.placeholder.com/150',
-            consultationFee: doc.consultationFee || mockDoc.consultationFee || 150,
-            availableDays: doc.availableDays || mockDoc.availableDays || ['Mon', 'Wed', 'Fri'],
-            availableTime: doc.availableTime || mockDoc.availableTime || '9:00 AM - 5:00 PM',
-            bio: doc.bio || mockDoc.bio
-          };
-        });
+              // Use matched mock avatar only if names match, otherwise rotate through professional avatars
+              const hasNameMatch = matchedMockDoc &&
+                matchedMockDoc.firstName === doc.firstName &&
+                matchedMockDoc.lastName === doc.lastName;
 
-        setDoctors(mergedDoctors);
+              const selectedAvatar = hasNameMatch
+                ? matchedMockDoc.avatar
+                : professionalAvatars[index % professionalAvatars.length];
 
-        // Handle both { data: [...] } and [...] response formats for departments
-        const rawDepts = deptsRes.data;
-        setDepartmentsList(Array.isArray(rawDepts) ? rawDepts : (rawDepts.data || []));
+              return {
+                ...mockDoc,
+                ...doc,
+                patients: doc.totalPatients || mockDoc.patients,
+                qualification: Array.isArray(doc.qualifications)
+                  ? doc.qualifications.join(', ')
+                  : (doc.qualifications || mockDoc.qualification),
+                experience: typeof doc.experience === 'number'
+                  ? `${doc.experience} years`
+                  : (doc.experience || mockDoc.experience),
+                avatar: selectedAvatar,
+                consultationFee: doc.consultationFee || mockDoc.consultationFee || 150,
+                availableDays: doc.availableDays || mockDoc.availableDays || ['Mon', 'Wed', 'Fri'],
+                availableTime: doc.availableTime || mockDoc.availableTime || '9:00 AM - 5:00 PM',
+                bio: doc.bio || mockDoc.bio
+              };
+            });
+            setDoctors(mergedDoctors);
+          }
+        } else {
+          console.warn('Doctors API failed, falling back to mock data:', docsResult.reason);
+          setDoctors(mockDoctors);
+        }
+
+        // Handle Departments Data
+        if (deptsResult.status === 'fulfilled') {
+          const rawDepts = deptsResult.value.data;
+          setDepartmentsList(Array.isArray(rawDepts) ? rawDepts : (rawDepts.data || []));
+        } else {
+          console.warn('Departments API failed:', deptsResult.reason);
+          const uniqueDepts = [...new Set(mockDoctors.map(d => d.department))].map(name => ({ name }));
+          setDepartmentsList(uniqueDepts);
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
-        toast.error('Failed to load doctors');
-        // Fallback to mock data if API completely fails
+        console.error('Unexpected error in data fetching:', error);
         setDoctors(mockDoctors);
       } finally {
         setLoading(false);
@@ -158,7 +192,15 @@ const Doctors = () => {
             >
               <Card className="doctor-card" hover onClick={() => setSelectedDoctor(doctor)}>
                 <div className="doctor-card-header">
-                  <img src={doctor.avatar} alt={`Dr. ${doctor.firstName}`} className="doctor-avatar" />
+                  <img
+                    src={doctor.avatar}
+                    alt={`Dr. ${doctor.firstName}`}
+                    className="doctor-avatar"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://cdn-icons-png.flaticon.com/512/377/3774299.png';
+                    }}
+                  />
                   <div className="doctor-rating">
                     <Star size={16} fill="currentColor" />
                     <span>{doctor.rating}</span>
@@ -216,7 +258,15 @@ const Doctors = () => {
         >
           <div className="doctor-modal-content">
             <div className="doctor-modal-header">
-              <img src={selectedDoctor.avatar} alt="Doctor" className="modal-avatar" />
+              <img
+                src={selectedDoctor.avatar}
+                alt="Doctor"
+                className="modal-avatar"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://cdn-icons-png.flaticon.com/512/377/3774299.png';
+                }}
+              />
               <div>
                 <Badge variant="primary">{selectedDoctor.specialization}</Badge>
                 <div className="modal-rating">
