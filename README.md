@@ -1,183 +1,121 @@
-# CloudCare Hospital Management System
+# CloudCare Hospital - Cloud & DevOps Project
 
-A modern, full-stack Hospital Management System built with the MERN stack (MongoDB, Express, React, Node.js). This application provides a comprehensive solution for managing hospital operations, including patient records, doctor schedules, appointments, and departmental organization.
+A production-ready Hospital Management System designed for scalable containerized deployment. This project demonstrates a full-stack MERN application (MongoDB, Express, React, Node.js) optimized for Cloud and DevOps workflows, featuring Docker containerization and Kubernetes orchestration.
 
-## 🚀 Features
+## 🚀 Project Overview
 
-### Core Roles
-- **Admin Dashboard**: Centralized control for hospital administrators to manage all aspects of the system.
-- **Doctor Portal**: (Planned) Interface for doctors to view schedules and patient details.
-- **Patient Portal**: (Planned) Interface for patients to book appointments and view history.
+The CloudCare Hospital application is a comprehensive digital solution for healthcare management. This repository focuses on the *infrastructure* and *deployment* aspect, showcasing best practices in:
 
-### Key Functionalities
-- **Patient Management**: 
-  - Register and manage patient profiles.
-  - Track medical history and appointments.
-- **Doctor Management**: 
-  - Detailed doctor profiles with specializations, qualifications, and availability.
-  - Department association.
-- **Appointment System**: 
-  - Real-time appointment scheduling.
-  - Status tracking (Scheduled, Completed, Cancelled).
-- **Department Management**: 
-  - Organize hospital units (Cardiology, Neurology, Pediatrics, etc.).
-- **Authentication & Security**: 
-  - Secure JWT-based authentication.
-  - Role-based route protection.
-- **Modern UI/UX**: 
-  - Responsive design using React and modern CSS.
-  - Interactive charts and dashboards.
-  - Smooth animations with Framer Motion.
+*   **Containerization**: Multi-stage Docker builds for optimized images.
+*   **Orchestration**: Kubernetes manifests for Deployments, Services, Ingress, and HPA.
+*   **Infrastructure as Code**: Declarative configuration for all resources.
+*   **Production Readiness**: Nginx integration, Health checks, and Resource limits.
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack & DevOps Tools
 
-### Frontend
-- **Framework**: [React](https://react.dev/) (v18)
-- **Build Tool**: [Vite](https://vitejs.dev/)
-- **Routing**: [React Router](https://reactrouter.com/) (v6)
-- **Styling**: Modern CSS3, [Framer Motion](https://www.framer.com/motion/) for animations
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Data Fetching**: [Axios](https://axios-http.com/)
-- **Charts**: [Recharts](https://recharts.org/)
+### Application
+*   **Frontend**: React (Vite), TailwindCSS, Framer Motion
+*   **Backend**: Node.js, Express
+*   **Database**: MongoDB
 
-### Backend
-- **Runtime**: [Node.js](https://nodejs.org/)
-- **Framework**: [Express.js](https://expressjs.com/)
-- **Database**: [MongoDB](https://www.mongodb.com/)
-- **ODM**: [Mongoose](https://mongoosejs.com/)
-- **Authentication**: JWT (JSON Web Tokens)
-- **CORS**: Enabled for secure cross-origin requests
+### Infrastructure
+*   **Docker**: Container runtime and image building
+*   **Kubernetes (K8s)**: Container orchestration
+*   **Nginx**: High-performance web server and reverse proxy
+*   **Helm** (Optional): Package management
 
-## ⚙️ Prerequisites
-
-Before running this project, ensure you have the following installed:
-- [Node.js](https://nodejs.org/) (v16 or higher)
-- [MongoDB](https://www.mongodb.com/try/download/community) (Local or Atlas URL)
-- [Git](https://git-scm.com/)
-
-## 📦 Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/cloudcare-hospital-react.git
-   cd cloudcare-hospital-react
-   ```
-
-2. **Install Dependencies**
-   
-   Install dependencies for both frontend and backend from the root directory:
-   ```bash
-   # Install backend dependencies
-   cd backend
-   npm install
-
-   # Install frontend dependencies
-   cd ../frontend
-   npm install
-   ```
-
-3. **Environment Setup**
-
-   Create a `.env` file in the `backend` directory (or root depending on your setup, check `server.js` path):
-   ```env
-   PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/cloudcare_db
-   JWT_SECRET=your_super_secret_key_here
-   ALLOWED_ORIGINS=http://localhost:5173
-   ```
-
-   *Note: Ensure your MongoDB server is running.*
-
-4. **Seed the Database**
-   
-   Populate the database with initial data (Admin user, Doctors, Departments):
-   ```bash
-   # From the root directory
-   npm run seed
-   # OR from backend directory
-   node server/seed.js
-   ```
-   
-   **Default Admin Credentials:**
-   - Email: `admin@cloudcare.com`
-   - Password: `password`
-
-## 🚀 Running the Application
-
- You can run both the backend and frontend concurrently from the root directory:
-
- ```bash
- npm start
- ```
- 
- Or run them separately:
-
- **Backend:**
- ```bash
- # Terminal 1
- npm run server:dev
- ```
-
- **Frontend:**
- ```bash
- # Terminal 2
- npm run dev
- ```
-
- Access the application at: `http://localhost:5173`
-
-## 📂 Project Structure
+## 📂 Folder Structure
 
 ```
 cloudcare-hospital-react/
-├── backend/                # Node.js/Express Backend
-│   ├── server/
-│   │   ├── controllers/    # Route logic
-│   │   ├── models/         # Mongoose Schemas
-│   │   ├── routes/         # API Routes
-│   │   └── server.js       # Entry point
-│   └── package.json
-├── frontend/               # React Frontend
-│   ├── src/
-│   │   ├── components/     # Reusable components
-│   │   ├── pages/          # Application pages (Dashboard, Patients, etc.)
-│   │   ├── App.jsx         # Main Component
-│   │   └── main.jsx        # Entry point
-│   └── package.json
-└── package.json            # Root configuration
+├── backend/                # Node.js/Express Service
+│   ├── Dockerfile          # Backend container definition
+│   └── ...
+├── frontend/               # React Service
+│   ├── Dockerfile          # Multi-stage build (Node -> Nginx)
+│   └── ...
+├── k8s/                    # Kubernetes Manifests
+│   ├── configmap.yaml      # Nginx configuration
+│   ├── deployment.yaml     # Frontend Deployment & Service
+│   ├── hpa.yaml            # Horizontal Pod Autoscaler
+│   └── ingress.yaml        # Ingress rules
+├── docker-compose.yml      # Local development orchestration
+└── README.md               # Documentation
 ```
 
-## 🔌 API Endpoints
+## ⚙️ Setup & Deployment
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| **Auth** | | |
-| POST | `/api/auth/login` | User login |
-| POST | `/api/auth/register` | User registration |
-| **Patients** | | |
-| GET | `/api/patients` | Get all patients |
-| POST | `/api/patients` | Add a new patient |
-| GET | `/api/patients/:id` | Get patient details |
-| **Doctors** | | |
-| GET | `/api/doctors` | Get all doctors |
-| POST | `/api/doctors` | Add a new doctor |
-| **Appointments** | | |
-| GET | `/api/appointments` | Get all appointments |
-| POST | `/api/appointments` | Schedule an appointment |
+### 1. Prerequisites
+*   Docker Desktop or Docker Engine
+*   Kubernetes Cluster (Minikube, Kind, or Cloud Provider)
+*   kubectl CLI tool
 
-## 🤝 Contributing
+### 2. Environment Variables
+Create a `.env` file in the `backend` directory based on the example below. 
+**Note:** For production/K8s, these should be managed via Kubernetes Secrets.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+```env
+PORT=5000
+# Update with your MongoDB Connection String
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/hospitalDB
+JWT_SECRET=production_secret_key_here
+ALLOWED_ORIGINS=http://cloudcare-hospital.local
+```
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### 3. Docker Deployment (Local)
+
+Build and run the application utilizing `docker-compose`:
+
+```bash
+# Build and start services
+docker-compose up --build -d
+
+# Check status
+docker-compose ps
+```
+
+Access the application at `http://localhost:5173` (Frontend) and `http://localhost:5000` (Backend).
+
+### 4. Kubernetes Deployment
+
+Ensure your Kubernetes cluster is running and `kubectl` is configured.
+
+**Step 1: Build Docker Images**
+```bash
+docker build -t cloudcare-hospital-frontend:latest ./frontend
+docker build -t cloudcare-hospital-backend:latest ./backend
+```
+*Note: If using Minikube/Kind, you may need to load images into the cluster cache or push to a registry.*
+
+**Step 2: Apply Manifests**
+```bash
+# Apply ConfigMap (Nginx Config)
+kubectl apply -f k8s/configmap.yaml
+
+# Apply Deployment & Service
+kubectl apply -f k8s/deployment.yaml
+
+# Apply Ingress (Requires Ingress Controller)
+kubectl apply -f k8s/ingress.yaml
+
+# Apply HPA (Requires Metrics Server)
+kubectl apply -f k8s/hpa.yaml
+```
+
+**Step 3: Verify Deployment**
+```bash
+kubectl get pods
+kubectl get services
+```
+
+## 🔍 Validation & Correctness
+
+This project has been verified for:
+*   ✅ **Production Builds**: Frontend uses multi-stage Docker build serving static files via Nginx.
+*   ✅ **Resilience**: Liveness and Readiness probes configured in K8s.
+*   ✅ **Scalability**: Horizontal Pod Autoscalers (HPA) configured for resource usage.
+*   ✅ **Security**: Non-root hints and environment variable separation (Ready for Secrets).
 
 ## 📄 License
+MIT License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-*Built with ❤️ for better healthcare management.*
