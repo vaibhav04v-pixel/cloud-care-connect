@@ -1,15 +1,37 @@
+// Import mongoose for defining data structures
 import mongoose from 'mongoose';
 
+// Define the 'Department' structure (Schema)
+// This blueprint describes a hospital department (e.g., Cardiology, Neurology)
 const departmentSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
+  // Unique name of the department
+  name: {
+    type: String,
+    required: true,
+    unique: true // No two departments can have the same name
+  },
+  // Description of what the department does
   description: String,
-  doctor: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor' },
+  // Link to the Head Doctor or a representative doctor for this department
+  doctor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Doctor'
+  },
+  // What floor this department is located on
   floor: Number,
+  // Direct phone number for this department
   phone: String,
+  // Official email address for this department
   email: String,
-  status: { type: String, default: 'Active' },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  // Current status (Active or Closed)
+  status: {
+    type: String,
+    default: 'Active'
+  }
+}, {
+  // Automatically store 'createdAt' and 'updatedAt' times
+  timestamps: true
 });
 
+// Create and export the 'Department' model
 export default mongoose.model('Department', departmentSchema);

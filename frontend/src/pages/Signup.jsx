@@ -6,10 +6,16 @@ import { Mail, Lock, User, Activity } from 'lucide-react';
 import Input from '../components/Input/Input';
 import Button from '../components/Button/Button';
 import { authAPI } from '../utils/api';
-import './Login.css'; // Reusing Login styles for consistency
+import './Login.css'; // Reusing Login styles for visual consistency
 
+/**
+ * Signup Component:
+ * The page where new users can create a brand new account.
+ */
 const Signup = () => {
     const navigate = useNavigate();
+
+    // Store all the user's registration data
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -18,6 +24,7 @@ const Signup = () => {
     });
     const [loading, setLoading] = useState(false);
 
+    // Updates form data state as the user types
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -25,25 +32,23 @@ const Signup = () => {
         });
     };
 
+    // Runs when the "Sign Up" button is clicked
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validation
+        // 1. VALIDATION CHECK: Safety first
         if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
             toast.error('Please fill in all fields');
             return;
         }
-
         if (!formData.email.includes('@')) {
             toast.error('Please enter a valid email');
             return;
         }
-
         if (formData.password.length < 6) {
             toast.error('Password must be at least 6 characters');
             return;
         }
-
         if (formData.password !== formData.confirmPassword) {
             toast.error('Passwords do not match');
             return;
@@ -52,17 +57,22 @@ const Signup = () => {
         setLoading(true);
 
         try {
+            // 2. BACKEND CALL: Send the signup data to the Node.js server
+            // The server will automatically create BOTH a User and a Patient profile
             const response = await authAPI.register({
                 name: formData.name,
                 email: formData.email,
                 password: formData.password
             });
 
+            // 3. SUCCESS HANDLING
             if (response.data.success) {
                 toast.success('Registration successful! Please login.');
+                // Send them to the login page now that they have an account
                 navigate('/login');
             }
         } catch (error) {
+            // 4. ERROR HANDLING: If email is already taken, etc.
             console.error(error);
             const errorMessage = error.response?.data?.error || 'Registration failed. Please try again.';
             toast.error(errorMessage);
@@ -89,6 +99,7 @@ const Signup = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="login-form">
+                        {/* Full Name Input */}
                         <Input
                             label="Full Name"
                             type="text"
@@ -100,6 +111,7 @@ const Signup = () => {
                             required
                         />
 
+                        {/* Email Input */}
                         <Input
                             label="Email Address"
                             type="email"
@@ -111,6 +123,7 @@ const Signup = () => {
                             required
                         />
 
+                        {/* Password Input */}
                         <Input
                             label="Password"
                             type="password"
@@ -122,6 +135,7 @@ const Signup = () => {
                             required
                         />
 
+                        {/* Password Confirmation */}
                         <Input
                             label="Confirm Password"
                             type="password"
@@ -143,12 +157,14 @@ const Signup = () => {
                             Sign Up
                         </Button>
 
+                        {/* Link back to login for existing users */}
                         <div className="login-options" style={{ justifyContent: 'center', marginTop: '1rem' }}>
                             <p>Already have an account? <Link to="/login" className="forgot-password">Login</Link></p>
                         </div>
                     </form>
                 </motion.div>
 
+                {/* Right side teaser info */}
                 <div className="login-info">
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
@@ -156,9 +172,7 @@ const Signup = () => {
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
                         <h2>CloudCare Hospital</h2>
-                        <p>
-                            Join our community to access personalized healthcare services.
-                        </p>
+                        <p>Join our community to access personalized healthcare services.</p>
                         <ul className="login-features">
                             <li>✓ Easy appointment booking</li>
                             <li>✓ Secure medical records</li>
