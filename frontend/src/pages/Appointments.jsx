@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Calendar, Mail, Phone, User, MapPin } from 'lucide-react';
+import { Calendar, Mail, Phone, User } from 'lucide-react';
 import Card from '../components/Card/Card';
 import Button from '../components/Button/Button';
 import Input from '../components/Input/Input';

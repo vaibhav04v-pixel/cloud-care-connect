@@ -1,33 +1,24 @@
-import Patient from './models/Patient.js';
-import Doctor from './models/Doctor.js';
-import Department from './models/Department.js';
-import Appointment from './models/Appointment.js';
-import User from './models/User.js';
+import { Patient, Doctor, Department, Appointment, User } from './models/index.js';
+import sequelize from './config/database.js';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 
 dotenv.config();
 
 const connectDB = async () => {
   try {
-    // await mongoose.connect(process.env.MONGODB_URI);
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('MongoDB connected');
+    await sequelize.authenticate();
+    console.log('MySQL connected');
   } catch (error) {
-    console.error('MongoDB connection error:', error.message);
+    console.error('MySQL connection error:', error.message);
     process.exit(1);
   }
 };
 
 const seedDB = async () => {
   try {
-    // Clear existing data
-    await Patient.deleteMany({});
-    await Doctor.deleteMany({});
-    await Department.deleteMany({});
-    await Appointment.deleteMany({});
-    await User.deleteMany({});
-
+    // Drop and recreate all tables
+    await sequelize.sync({ force: true });
+    
     // Create Admin User
     await User.create({
       name: 'Hospital Admin',
@@ -87,7 +78,7 @@ const seedDB = async () => {
       email: 'sarah.johnson@cloudcare.com',
       phone: '+1 (555) 123-4567',
       specialization: 'Cardiology',
-      department: cardiology._id,
+      departmentId: cardiology.id,
       experience: 15,
       qualifications: ['MD', 'FACC'],
       bio: 'Specializes in interventional cardiology and heart failure management.',
@@ -106,7 +97,7 @@ const seedDB = async () => {
       email: 'michael.chen@cloudcare.com',
       phone: '+1 (555) 123-4568',
       specialization: 'Interventional Cardiology',
-      department: cardiology._id,
+      departmentId: cardiology.id,
       experience: 12,
       qualifications: ['MD', 'PhD'],
       bio: 'Expert in minimally invasive cardiac procedures and advanced imaging.',
@@ -125,7 +116,7 @@ const seedDB = async () => {
       email: 'emily.rodriguez@cloudcare.com',
       phone: '+1 (555) 123-4569',
       specialization: 'Pediatric Cardiology',
-      department: cardiology._id,
+      departmentId: cardiology.id,
       experience: 10,
       qualifications: ['MD', 'FAAP'],
       bio: 'Specializes in congenital heart defects and pediatric cardiac care.',
@@ -144,7 +135,7 @@ const seedDB = async () => {
       email: 'david.thompson@cloudcare.com',
       phone: '+1 (555) 234-5678',
       specialization: 'Neurology',
-      department: neurology._id,
+      departmentId: neurology.id,
       experience: 18,
       qualifications: ['MD', 'FAAN'],
       bio: 'Expert in treating complex neurological disorders like epilepsy and stroke.',
@@ -163,7 +154,7 @@ const seedDB = async () => {
       email: 'jennifer.lee@cloudcare.com',
       phone: '+1 (555) 234-5679',
       specialization: 'Neurosurgery',
-      department: neurology._id,
+      departmentId: neurology.id,
       experience: 14,
       qualifications: ['MD', 'FACS'],
       bio: 'Specializes in minimally invasive brain and spine surgery.',
@@ -182,7 +173,7 @@ const seedDB = async () => {
       email: 'robert.martinez@cloudcare.com',
       phone: '+1 (555) 345-6789',
       specialization: 'Orthopedic Surgery',
-      department: orthopedics._id,
+      departmentId: orthopedics.id,
       experience: 16,
       qualifications: ['MD', 'FAAOS'],
       bio: 'Expert in joint replacement surgery and sports medicine.',
@@ -201,7 +192,7 @@ const seedDB = async () => {
       email: 'amanda.taylor@cloudcare.com',
       phone: '+1 (555) 345-6790',
       specialization: 'Sports Medicine',
-      department: orthopedics._id,
+      departmentId: orthopedics.id,
       experience: 11,
       qualifications: ['MD', 'FACSM'],
       bio: 'Specializes in athletic injury prevention and treatment.',
@@ -220,7 +211,7 @@ const seedDB = async () => {
       email: 'james.wilson@cloudcare.com',
       phone: '+1 (555) 456-7890',
       specialization: 'General Practice',
-      department: generalMedicine._id,
+      departmentId: generalMedicine.id,
       experience: 20,
       qualifications: ['MD', 'FAAFP'],
       bio: 'Experienced family physician providing comprehensive primary care.',
@@ -239,7 +230,7 @@ const seedDB = async () => {
       email: 'patricia.anderson@cloudcare.com',
       phone: '+1 (555) 567-8901',
       specialization: 'Dermatology',
-      department: dermatology._id,
+      departmentId: dermatology.id,
       experience: 13,
       qualifications: ['MD', 'FAAD'],
       bio: 'Expert in medical and cosmetic dermatology.',
@@ -252,13 +243,13 @@ const seedDB = async () => {
     });
 
     // D010
-    const doctor10 = await Doctor.create({
+    await Doctor.create({
       firstName: 'Christopher',
       lastName: 'Brown',
       email: 'christopher.brown@cloudcare.com',
       phone: '+1 (555) 678-9012',
       specialization: 'Pediatrics',
-      department: pediatrics._id,
+      departmentId: pediatrics.id,
       experience: 17,
       qualifications: ['MD', 'FAAP'],
       bio: 'Compassionate pediatrician dedicated to comprehensive child care.',
@@ -269,13 +260,14 @@ const seedDB = async () => {
       consultationFee: 110,
       avatar: 'https://i.pravatar.cc/150?img=51'
     });
+    
     // Create patients
     const patient1 = await Patient.create({
       firstName: 'James',
       lastName: 'Wilson',
       email: 'james.wilson@email.com',
       phone: '555-2001',
-      dateOfBirth: new Date('1975-03-15'),
+      dateOfBirth: '1975-03-15',
       gender: 'Male',
       bloodGroup: 'O+',
       address: '123 Main St, City',
@@ -288,7 +280,7 @@ const seedDB = async () => {
       lastName: 'Brown',
       email: 'emily.brown@email.com',
       phone: '555-2002',
-      dateOfBirth: new Date('1988-07-22'),
+      dateOfBirth: '1988-07-22',
       gender: 'Female',
       bloodGroup: 'A+',
       address: '456 Oak Ave, City',
@@ -296,31 +288,29 @@ const seedDB = async () => {
       status: 'Active'
     });
 
-    const allDoctors = await Doctor.find({});
-    // Need to find created doctors for appointments
-    // Assuming the order of creation, or find by name
-    const doc1 = await Doctor.findOne({ firstName: 'Sarah', lastName: 'Johnson' });
-    const doc2 = await Doctor.findOne({ firstName: 'Michael', lastName: 'Chen' });
+    const doc1 = await Doctor.findOne({ where: { firstName: 'Sarah', lastName: 'Johnson' } });
+    const doc2 = await Doctor.findOne({ where: { firstName: 'Michael', lastName: 'Chen' } });
 
     // Create appointments
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomoFormatted = tomorrow.toISOString().split('T')[0];
 
     await Appointment.create({
-      patient: patient1._id,
-      doctor: doc1._id,
-      department: cardiology._id,
-      appointmentDate: tomorrow,
+      patientId: patient1.id,
+      doctorId: doc1.id,
+      departmentId: cardiology.id,
+      appointmentDate: tomoFormatted,
       time: '10:00 AM',
       reason: 'Regular checkup',
       status: 'Scheduled'
     });
 
     await Appointment.create({
-      patient: patient2._id,
-      doctor: doc2 ? doc2._id : doc1._id, // Fallback if doc2 not found
-      department: neurology._id,
-      appointmentDate: tomorrow,
+      patientId: patient2.id,
+      doctorId: doc2 ? doc2.id : doc1.id, // Fallback if doc2 not found
+      departmentId: neurology.id,
+      appointmentDate: tomoFormatted,
       time: '2:00 PM',
       reason: 'Neurological evaluation',
       status: 'Scheduled'

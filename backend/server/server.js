@@ -1,8 +1,6 @@
 // This is the main starting point of the backend server
 // Import 'express' which is a framework that helps us handle web requests
 import express from 'express';
-// Import 'mongoose' which helps us communicate with the MongoDB database
-import mongoose from 'mongoose';
 // Import 'cors' (Cross-Origin Resource Sharing) which allows our frontend website to talk to this backend
 import cors from 'cors';
 // Import 'dotenv' to read secret variables (like database passwords) from the .env file
@@ -28,18 +26,20 @@ app.use(express.json());
 // This line allows our app to understand data sent from traditional HTML forms
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB Database
-// We define a function using 'async' because connecting to a database takes time
+import sequelize from './config/database.js';
+import './models/index.js'; // Ensure models are loaded and associated
+
+// Connect to MySQL Database
 const connectDB = async () => {
   try {
-    // Try to connect to the database using the address (URI) provided in our variables
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
-    // If successful, print a checkmark and the host name to the console
-    console.log(`✅ MongoDB connected: ${conn.connection.host}`);
+    await sequelize.authenticate();
+    console.log(`✅ MySQL connected: ${process.env.DB_HOST}`);
+    
+    // Sync models without dropping existing tables in standard run
+    await sequelize.sync({ alter: true });
+    console.log(`✅ Database synchronized`);
   } catch (error) {
-    // If something goes wrong (like the database is turned off), print an X and the error
-    console.error(`✗ MongoDB connection error: ${error.message}`);
-    // Close the entire server program because it cannot work without a database
+    console.error(`✗ MySQL connection error: ${error.message}`);
     process.exit(1);
   }
 };

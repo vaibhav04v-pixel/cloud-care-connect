@@ -1,37 +1,35 @@
-// Import mongoose for defining data structures
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
 
-// Define the 'Department' structure (Schema)
-// This blueprint describes a hospital department (e.g., Cardiology, Neurology)
-const departmentSchema = new mongoose.Schema({
-  // Unique name of the department
+const Department = sequelize.define('Department', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   name: {
-    type: String,
-    required: true,
-    unique: true // No two departments can have the same name
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
   },
-  // Description of what the department does
-  description: String,
-  // Link to the Head Doctor or a representative doctor for this department
-  doctor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Doctor'
+  description: {
+    type: DataTypes.TEXT
   },
-  // What floor this department is located on
-  floor: Number,
-  // Direct phone number for this department
-  phone: String,
-  // Official email address for this department
-  email: String,
-  // Current status (Active or Closed)
+  floor: {
+    type: DataTypes.INTEGER
+  },
+  phone: {
+    type: DataTypes.STRING
+  },
+  email: {
+    type: DataTypes.STRING
+  },
   status: {
-    type: String,
-    default: 'Active'
+    type: DataTypes.STRING,
+    defaultValue: 'Active'
   }
 }, {
-  // Automatically store 'createdAt' and 'updatedAt' times
   timestamps: true
 });
 
-// Create and export the 'Department' model
-export default mongoose.model('Department', departmentSchema);
+export default Department;

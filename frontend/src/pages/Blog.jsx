@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import Card from '../components/Card/Card';
 import Button from '../components/Button/Button';
 import { blogPosts } from '../data/blogPosts';
 import './Blog.css';

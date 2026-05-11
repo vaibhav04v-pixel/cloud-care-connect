@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Filter, Mail, Phone, MapPin, Calendar, Star } from 'lucide-react';
+import { Search, Filter, Mail, Phone, Calendar, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Card from '../components/Card/Card';
 import Button from '../components/Button/Button';

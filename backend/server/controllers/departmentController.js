@@ -1,52 +1,65 @@
-// Import the Department database model
-import Department from '../models/Department.js';
+import { Department, Doctor } from '../models/index.js';
 
-// GET ALL DEPARTMENTS: Fetches a list of all wings/divisions in the hospital
 export const getDepartments = async (req, res) => {
   try {
-    // Get all records and fill in details for the head doctor
-    const departments = await Department.find().populate('doctor');
+    const departments = await Department.findAll({
+      include: [{ model: Doctor, as: 'headDoctor' }]
+    });
     res.json(departments);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// GET ONE DEPARTMENT: Fetches details for a specific department (e.g., Surgery)
 export const getDepartmentById = async (req, res) => {
   try {
-    const department = await Department.findById(req.params.id).populate('doctor');
+    const department = await Department.findByPk(req.params.id, {
+      include: [{ model: Doctor, as: 'headDoctor' }]
+    });
+    if (!department) return res.status(404).json({ message: 'Department not found' });
     res.json(department);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// CREATE DEPARTMENT: Establishes a new wing in the hospital
 export const createDepartment = async (req, res) => {
   try {
-    const department = new Department(req.body);
-    await department.save();
+    // Note: If req.body.doctor is passed, it should be mapped to headDoctorId
+    const data = { ...req.body };
+    if (data.doctor) {
+      data.headDoctorId = data.doctor;
+      delete data.doctor;
+    }
+    const department = await Department.create(data);
     res.status(201).json(department);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-// UPDATE DEPARTMENT: Modifies department settings, floor, or phone
 export const updateDepartment = async (req, res) => {
   try {
-    const department = await Department.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const department = await Department.findByPk(req.params.id);
+    if (!department) return res.status(404).json({ message: 'Department not found' });
+    
+    const data = { ...req.body };
+    if (data.doctor) {
+      data.headDoctorId = data.doctor;
+      delete data.doctor;
+    }
+
+    await department.update(data);
     res.json(department);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-// DELETE DEPARTMENT: Removes a department from the system
 export const deleteDepartment = async (req, res) => {
   try {
-    await Department.findByIdAndDelete(req.params.id);
+    const deletedAmount = await Department.destroy({ where: { id: req.params.id } });
+    if (!deletedAmount) return res.status(404).json({ message: 'Department not found' });
     res.json({ message: 'Department deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 // Icons for the dashboard cards and lists
 import { Users, Calendar, Activity, TrendingUp, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 // Recharts library: This is what draws the beautiful graphs and charts
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 // Custom UI cards and badges
 import Card from '../components/Card/Card';
 import Badge from '../components/Badge/Badge';
@@ -50,7 +50,7 @@ const Dashboard = () => {
   }, []);
 
   // Use "Destructuring" to extract individual pieces of the stats object for easier use
-  const { overview, appointmentsByMonth, patientsByDepartment, appointmentStatus, topDoctors, recentAppointments } = stats;
+  const { overview, appointmentsByMonth, appointmentStatus, topDoctors, recentAppointments } = stats;
 
   // Helper function to decide which color a status badge should be
   const getStatusBadge = (status) => {
@@ -92,7 +92,7 @@ const Dashboard = () => {
         <motion.div className="dashboard-header" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div>
             <h1>Dashboard</h1>
-            <p>Welcome back! Here's what's happening today.</p>
+            <p>Welcome back! Here&apos;s what&apos;s happening today.</p>
           </div>
           <div className="dashboard-date">
             {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}

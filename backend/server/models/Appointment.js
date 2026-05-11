@@ -1,55 +1,35 @@
-// Import mongoose for database modeling
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
 
-// Define the 'Appointment' structure (Schema)
-// This blueprint tracks whenever a patient books a time with a doctor
-const appointmentSchema = new mongoose.Schema({
-  // Link to the patient who is visiting
-  patient: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Patient',
-    required: true, // Must have a patient
-    index: true // Fast lookup by patient ID
+const Appointment = sequelize.define('Appointment', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
   },
-  // Link to the doctor who is being visited
-  doctor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Doctor',
-    index: true // Fast lookup by doctor ID
-  },
-  // Link to the department where the appointment takes place
-  department: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Department',
-    index: true
-  },
-  // Date and Time when the visit is scheduled
   appointmentDate: {
-    type: Date,
-    required: true,
-    index: true
+    type: DataTypes.DATEONLY, // Change to DATEONLY to make searching simpler, or just DATE. Date is better based on standard seed values.
+    allowNull: false
   },
-  // The specific time of day (e.g., '10:30 AM')
-  time: String,
-  // The reason for the visit (e.g., 'Regular Checkup')
-  reason: String,
-  // Current state of the visit
+  time: {
+    type: DataTypes.STRING
+  },
+  reason: {
+    type: DataTypes.STRING
+  },
   status: {
-    type: String,
-    enum: ['Scheduled', 'Completed', 'Cancelled', 'No-show'], // Possible states
-    default: 'Scheduled' // Starts as Scheduled
+    type: DataTypes.ENUM('Scheduled', 'Completed', 'Cancelled', 'No-show'),
+    defaultValue: 'Scheduled'
   },
-  // Clinical notes taken during the visit
-  notes: String,
-  // How long the appointment lasted in minutes
+  notes: {
+    type: DataTypes.TEXT
+  },
   duration: {
-    type: Number,
-    default: 30
+    type: DataTypes.INTEGER,
+    defaultValue: 30
   }
 }, {
-  // Automatically record timestamps for creation and changes
   timestamps: true
 });
 
-// Create and export the 'Appointment' model
-export default mongoose.model('Appointment', appointmentSchema);
+export default Appointment;

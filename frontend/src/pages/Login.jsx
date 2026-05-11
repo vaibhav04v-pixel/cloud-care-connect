@@ -136,7 +136,7 @@ const Login = ({ onLogin }) => {
 
                         {/* Switch to Signup page if they don't have an account */}
                         <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-                            <p>Don't have an account? <Link to="/signup" className="forgot-password">Sign up</Link></p>
+                            <p>Don&apos;t have an account? <Link to="/signup" className="forgot-password">Sign up</Link></p>
                         </div>
 
                         {/* SUBMIT BUTTON */}
