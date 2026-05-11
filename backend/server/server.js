@@ -39,9 +39,9 @@ const connectDB = async () => {
     await sequelize.sync({ alter: true });
     console.log(`✅ Database synchronized`);
   } catch (error) {
-    console.error(`✗ MySQL connection error: ${error.message}`);
-    process.exit(1);
-  }
+      console.error(`✗ MySQL connection error: ${error.message}`);
+      console.log("⚠ Running without database connection");
+    }
 };
 
 // Import the Route files. Each file contains the URLs for a specific section of the app.

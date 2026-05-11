@@ -24,7 +24,7 @@ services:
       - DB_PASSWORD=rootpassword
       - DB_NAME=hospital_management
       - JWT_SECRET=dev_secret_key_change_in_production
-      - ALLOWED_ORIGINS=http://localhost:5173
+      - ALLOWED_ORIGINS=http://localhost:3000
     depends_on:
       - mysql
     networks:
@@ -33,7 +33,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "5173:5173"
+      - "3000:80"
     environment:
       - VITE_API_URL=http://localhost:5000/api
     depends_on:

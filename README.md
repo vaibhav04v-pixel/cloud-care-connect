@@ -12,8 +12,7 @@ This project is not just a website—it is a production-ready infrastructure sho
 *   **🐳 Containerization**: Microservices architecture using **Docker**. Features multi-stage builds to keep production images tiny and secure.
 *   **☸️ Orchestration**: Managed by **Kubernetes (K8s)**.
     *   **Deployments**: Self-healing pods that restart automatically if they crash.
-    *   **HPA (Horizontal Pod Autoscaler)**: Automatically adds more "clones" of the website if traffic spikes.
-    *   **Services & Ingress**: Handles load balancing and directs traffic to the right containers via **Nginx**.
+    *   **Services**: Exposes the application using NodePort for simple local access via Minikube.
 *   **⚙️ CI/CD Ready**: Structured to integrate with GitHub Actions or Jenkins for automated cloud deployment.
 
 ## 🛠️ Tech Stack
@@ -35,11 +34,9 @@ This project is not just a website—it is a production-ready infrastructure sho
 cloudcare-hospital/         # Root directory of the CloudCare Hospital project
 ├── backend/                # Node.js API Service + Dockerfile
 ├── frontend/               # React UI Service + Multi-stage Dockerfile
-├── k8s/                    # ☸️ Kubernetes Manifests
-│   ├── deployment.yaml     # App scaling & deployment logic
-│   ├── service.yaml        # Internal networking
-│   ├── hpa.yaml            # Auto-scaling rules (CPU/RAM)
-│   └── ingress.yaml        # External Traffic Management (Nginx)
+├── k8s/                    # ☸️ Kubernetes Manifests for Minikube
+│   ├── deployment.yaml     # Application deployment logic
+│   └── service.yaml        # Exposes the application via NodePort
 ├── docker-compose.yml      # Local dev orchestration
 └── README.md               # Infrastructure Documentation
 ```
@@ -74,7 +71,7 @@ docker push your-registry/cloudcare-frontend:latest
 **Step 3: Deploy to K8s**
 ```bash
 # Apply all the infrastructure manifests located in the k8s directory to your cluster
-# This will spin up the deployments, services, ingress, and auto-scaling rules
+# This will spin up the deployments and services tailored for Minikube
 kubectl apply -f k8s/
 ```
 
