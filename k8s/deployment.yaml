@@ -1,82 +1,242 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: cloudcare-hospital-frontend
+#   labels:
+#     app: cloudcare-hospital
+#     tier: frontend
+# spec:
+#   replicas: 2
+#   selector:
+#     matchLabels:
+#       app: cloudcare-hospital
+#       tier: frontend
+#   template:
+#     metadata:
+#       labels:
+#         app: cloudcare-hospital
+#         tier: frontend
+#     spec:
+#       containers:
+#       - name: frontend
+#         image: cloudcare-hospital-frontend:latest
+#         imagePullPolicy: IfNotPresent
+#         ports:
+#         - containerPort: 80
+#           name: http
+#           protocol: TCP
+#         resources:
+#           requests:
+#             memory: "128Mi"
+#             cpu: "100m"
+#           limits:
+#             memory: "256Mi"
+#             cpu: "200m"
+#         livenessProbe:
+#           httpGet:
+#             path: /health
+#             port: 80
+#           initialDelaySeconds: 30
+#           periodSeconds: 10
+#           timeoutSeconds: 5
+#           failureThreshold: 3
+#         readinessProbe:
+#           httpGet:
+#             path: /health
+#             port: 80
+#           initialDelaySeconds: 10
+#           periodSeconds: 5
+#           timeoutSeconds: 3
+#           failureThreshold: 3
+#         env:
+#         - name: NODE_ENV
+#           value: "production"
+#         volumeMounts:
+#         - name: nginx-config
+#           mountPath: /etc/nginx/conf.d/default.conf
+#           subPath: nginx.conf
+#       volumes:
+#       - name: nginx-config
+#         configMap:
+#           name: cloudcare-hospital-config
+#       restartPolicy: Always
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: cloudcare-hospital-frontend-service
+#   labels:
+#     app: cloudcare-hospital
+#     tier: frontend
+# spec:
+#   type: NodePort
+#   selector:
+#     app: cloudcare-hospital
+#     tier: frontend
+#   ports:
+#   - port: 80
+#     targetPort: 80
+#     nodePort: 30080
+#     protocol: TCP
+#     name: http
+#   sessionAffinity: None
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: cloudcare-hospital-frontend
   labels:
     app: cloudcare-hospital
     tier: frontend
+
 spec:
   replicas: 2
+
   selector:
     matchLabels:
       app: cloudcare-hospital
       tier: frontend
+
   template:
     metadata:
       labels:
         app: cloudcare-hospital
         tier: frontend
+
     spec:
       containers:
-      - name: frontend
-        image: cloudcare-hospital-frontend:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 80
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
-        env:
-        - name: NODE_ENV
-          value: "production"
-        volumeMounts:
-        - name: nginx-config
-          mountPath: /etc/nginx/conf.d/default.conf
-          subPath: nginx.conf
-      volumes:
-      - name: nginx-config
-        configMap:
-          name: cloudcare-hospital-config
-      restartPolicy: Always
+        - name: frontend
+
+          image: vaibhavvelumuri/careconnect_hospital-portel-frontend:v1
+
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 80
+              protocol: TCP
+              name: http
+
+          env:
+            - name: NODE_ENV
+              value: "production"
+
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+
 ---
 apiVersion: v1
 kind: Service
+
 metadata:
   name: cloudcare-hospital-frontend-service
   labels:
     app: cloudcare-hospital
     tier: frontend
+
 spec:
   type: NodePort
+
   selector:
     app: cloudcare-hospital
     tier: frontend
+
   ports:
-  - port: 80
-    targetPort: 80
-    nodePort: 30080
-    protocol: TCP
-    name: http
-  sessionAffinity: None
+    - port: 80
+      targetPort: 80
+      nodePort: 30080
+      protocol: TCP
+      name: http
+
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: cloudcare-hospital-backend
+  labels:
+    app: cloudcare-hospital
+    tier: backend
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: cloudcare-hospital
+      tier: backend
+
+  template:
+    metadata:
+      labels:
+        app: cloudcare-hospital
+        tier: backend
+
+    spec:
+      containers:
+        - name: backend
+
+          image: vaibhavvelumuri/careconnect_hospital-portel-backend:v1
+
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+              name: http
+
+          env:
+            - name: PORT
+              value: "5000"
+
+            - name: DB_HOST
+              value: "mysql"
+
+            - name: DB_USER
+              value: "root"
+
+            - name: DB_PASSWORD
+              value: "rootpassword"
+
+            - name: DB_NAME
+              value: "hospital_management"
+
+            - name: NODE_ENV
+              value: "production"
+
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: cloudcare-hospital-backend-service
+  labels:
+    app: cloudcare-hospital
+    tier: backend
+
+spec:
+  type: ClusterIP
+
+  selector:
+    app: cloudcare-hospital
+    tier: backend
+
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+      name: http
