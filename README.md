@@ -1,6 +1,6 @@
 # 🏥 CloudCare Hospital - Production-Grade Cloud & DevOps Showcase
 
-A modern, full-stack Hospital Management System (MERN) architected for **High Availability**, **Scalability**, and **Cloud-Native Deployment**. This project serves as a comprehensive showcase of modern DevOps practices, featuring a dedicated **React/Node.js** application deployed on **AWS EC2** using **Docker** and **Kubernetes**.
+A modern, full-stack Hospital Management System architected for **High Availability**, **Scalability**, and **Cloud-Native Deployment**. This project serves as a comprehensive showcase of modern DevOps practices, featuring a dedicated **React/Node.js** application deployed on **AWS EC2** using **Docker** and **Kubernetes**.
 
 ---
 
@@ -21,7 +21,7 @@ This project is not just a website—it is a production-ready infrastructure sho
 ### Core Application
 *   **Frontend**: React (Vite), Framer Motion (Animations), TailwindCSS/Vanilla CSS.
 *   **Backend**: Node.js, Express (RESTful API).
-*   **Database**: MongoDB (Stateless container linked to persistent cloud storage).
+*   **Database**: MySQL with Sequelize ORM (Relational, Structured).
 
 ### Infrastructure Tools
 *   **AWS EC2**: Our primary cloud hosting environment.
@@ -83,5 +83,4 @@ kubectl apply -f k8s/
 *   **Responsive UI**: Optimized for mobile, tablet, and desktop viewing.
 *   **Theme Engine**: Persists user's Dark/Light mode preference across sessions.
 
----
-*Created as a demonstration of Production Cloud Architecture and MERN Stack development.*
+*Created as a demonstration of Production Cloud Architecture and Node.js/MySQL Full-Stack development.*

@@ -1,69 +1,62 @@
-// Import mongoose to structure our database data
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
 
-// Define the 'Patient' structure (Schema)
-// This blueprint stores personal and medical information for patients
-const patientSchema = new mongoose.Schema({
-  // Patient's first name
+const Patient = sequelize.define('Patient', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   firstName: {
-    type: String,
-    required: true // Compulsory field
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  // Patient's last name
   lastName: {
-    type: String,
-    required: true // Compulsory field
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  // Patient's personal email address
   email: {
-    type: String,
-    required: true,
-    unique: true, // Cannot have duplicate emails
-    index: true, // Indexed for high-speed searching
-    lowercase: true, // Stored in lowercase for consistency
-    trim: true // Cleans up leading/trailing spaces
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
   },
-  // Patient's primary phone number
   phone: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  // Link to the 'User' account this patient uses to log in
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Points to the User collection
-    index: true
+  dateOfBirth: {
+    type: DataTypes.DATEONLY,
   },
-  // Date of birth for age calculation
-  dateOfBirth: { type: Date },
-  // Gender identification
   gender: {
-    type: String,
-    enum: ['Male', 'Female', 'Other'] // Restricted to these choices
+    type: DataTypes.ENUM('Male', 'Female', 'Other'),
   },
-  // Blood group (e.g., O+, A-, etc.)
-  bloodGroup: String,
-  // Residential address
-  address: String,
-  // Phone number of someone to call in an emergency
-  emergencyContact: String,
-  // Insurance provider information
-  insurance: String,
-  // List of previous illnesses or allergies
-  medicalHistory: [String],
-  // URL to a profile picture
-  avatar: String,
-  // Current status (Active, Inactive, etc.)
+  bloodGroup: {
+    type: DataTypes.STRING,
+  },
+  address: {
+    type: DataTypes.STRING,
+  },
+  emergencyContact: {
+    type: DataTypes.STRING,
+  },
+  insurance: {
+    type: DataTypes.STRING,
+  },
+  medicalHistory: {
+    type: DataTypes.JSON, // Array of strings
+  },
+  avatar: {
+    type: DataTypes.STRING,
+  },
   status: {
-    type: String,
-    default: 'Active'
+    type: DataTypes.STRING,
+    defaultValue: 'Active',
   },
-  // The date of the patient's most recent visit
-  lastVisit: Date
+  lastVisit: {
+    type: DataTypes.DATE,
+  },
 }, {
-  // Automatically record creation and update times
-  timestamps: true
+  timestamps: true,
 });
 
-// Create and export the 'Patient' model
-export default mongoose.model('Patient', patientSchema);
+export default Patient;

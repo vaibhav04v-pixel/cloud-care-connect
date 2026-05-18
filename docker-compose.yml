@@ -1,12 +1,15 @@
 version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:latest
+  mysql:
+    image: mysql:8.0
     ports:
-      - "27017:27017"
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=cloudcare_db
     volumes:
-      - mongodb_data:/data/db
+      - mysql_data:/var/lib/mysql
     networks:
       - app-network
 
@@ -16,11 +19,14 @@ services:
       - "5000:5000"
     environment:
       - PORT=5000
-      - MONGODB_URI=mongodb://mongodb:27017/cloudcare_db
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_DB=cloudcare_db
       - JWT_SECRET=dev_secret_key_change_in_production
       - ALLOWED_ORIGINS=http://localhost:5173
     depends_on:
-      - mongodb
+      - mysql
     networks:
       - app-network
 
@@ -43,4 +49,4 @@ networks:
     driver: bridge
 
 volumes:
-  mongodb_data:
+  mysql_data:

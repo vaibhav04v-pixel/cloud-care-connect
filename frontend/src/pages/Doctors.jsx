@@ -185,7 +185,7 @@ const Doctors = () => {
         <div className="doctors-grid">
           {filteredDoctors.map((doctor, index) => (
             <motion.div
-              key={doctor._id || doctor.id || index}
+              key={doctor.id || doctor.id || index}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}

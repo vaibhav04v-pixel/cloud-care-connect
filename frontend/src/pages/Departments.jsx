@@ -76,7 +76,7 @@ const Departments = () => {
       <div className="container page-content">
         {departments.map((dept, index) => (
           <motion.div
-            key={dept._id || dept.id}
+            key={dept.id || dept.id}
             className={`department-row ${index % 2 === 0 ? '' : 'reverse'}`}
             initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
             whileInView={{ opacity: 1, x: 0 }}

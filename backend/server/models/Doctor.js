@@ -1,70 +1,70 @@
-// Import the 'mongoose' library to define our database structure
-import mongoose from 'mongoose';
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
 
-// Define the 'Doctor' structure (Schema)
-// This blueprint describes all the information we store about a doctor
-const doctorSchema = new mongoose.Schema({
-  // Store the doctor's first name
+const Doctor = sequelize.define('Doctor', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
   firstName: {
-    type: String,
-    required: true // Must provide a first name
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  // Store the doctor's last name
   lastName: {
-    type: String,
-    required: true // Must provide a last name
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  // Store the professional email address
   email: {
-    type: String,
-    required: true, // Must provide an email
-    unique: true, // No two doctors can share the same email
-    index: true, // Create a database index for fast searching
-    lowercase: true, // Keep emails consistently in lowercase
-    trim: true // Discard extra whitespaces
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
   },
-  // Store the contact phone number
   phone: {
-    type: String,
-    required: true // Must provide a phone number
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  // What the doctor specializes in (e.g., Cardiology)
-  specialization: String,
-  // Link to the Department this doctor belongs to
-  department: {
-    type: mongoose.Schema.Types.ObjectId, // Reference ID
-    ref: 'Department', // Points to the 'Department' collection
-    index: true // Fast lookup by department
+  specialization: {
+    type: DataTypes.STRING,
   },
-  // Years of professional experience
-  experience: Number,
-  // List of medical degrees and certifications (e.g., ['MD', 'PhD'])
-  qualifications: [String],
-  // Short professional biography or description
-  bio: String,
-  // Patient rating from 1 to 5
+  experience: {
+    type: DataTypes.INTEGER,
+  },
+  qualifications: {
+    type: DataTypes.JSON, // Array of strings
+  },
+  bio: {
+    type: DataTypes.TEXT,
+  },
   rating: {
-    type: Number,
-    default: 0 // Starts at 0 until rated
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
   },
-  // Total number of patients this doctor has treated
   totalPatients: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
-  // List of time slots when the doctor is available for appointments
-  availableSlots: [String],
-  // URL to the doctor's profile picture
-  avatar: String,
-  // Current employment status (Active or On-Leave)
+  availableSlots: {
+    type: DataTypes.JSON,
+  },
+  avatar: {
+    type: DataTypes.STRING,
+  },
   status: {
-    type: String,
-    default: 'Active'
+    type: DataTypes.STRING,
+    defaultValue: 'Active',
+  },
+  availableDays: {
+    type: DataTypes.JSON,
+  },
+  availableTime: {
+    type: DataTypes.STRING,
+  },
+  consultationFee: {
+    type: DataTypes.FLOAT,
   }
 }, {
-  // Automatically track when the doctor record was created and last updated
-  timestamps: true
+  timestamps: true,
 });
 
-// Create and export the 'Doctor' model
-export default mongoose.model('Doctor', doctorSchema);
+export default Doctor;

@@ -59,7 +59,7 @@ const Patients = () => {
         if (confirm('Are you sure you want to delete this patient?')) {
             try {
                 await patientsAPI.delete(id);
-                setPatients(patients.filter(p => p._id !== id && p.id !== id));
+                setPatients(patients.filter(p => p.id !== id && p.id !== id));
                 toast.success('Patient deleted successfully');
             } catch (error) {
                 console.error('Error deleting patient:', error);
@@ -124,7 +124,7 @@ const Patients = () => {
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <Button size="sm" variant="ghost" icon={<Eye size={16} />} onClick={() => setSelectedPatient(row)} />
                     <Button size="sm" variant="ghost" icon={<Edit size={16} />} onClick={() => toast.info('Edit feature coming soon')} />
-                    <Button size="sm" variant="ghost" icon={<Trash2 size={16} />} onClick={() => handleDelete(row._id || row.id)} />
+                    <Button size="sm" variant="ghost" icon={<Trash2 size={16} />} onClick={() => handleDelete(row.id || row.id)} />
                 </div>
             )
         }
