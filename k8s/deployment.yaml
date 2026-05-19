@@ -1,85 +1,3 @@
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: cloudcare-hospital-frontend
-#   labels:
-#     app: cloudcare-hospital
-#     tier: frontend
-# spec:
-#   replicas: 2
-#   selector:
-#     matchLabels:
-#       app: cloudcare-hospital
-#       tier: frontend
-#   template:
-#     metadata:
-#       labels:
-#         app: cloudcare-hospital
-#         tier: frontend
-#     spec:
-#       containers:
-#       - name: frontend
-#         image: cloudcare-hospital-frontend:latest
-#         imagePullPolicy: IfNotPresent
-#         ports:
-#         - containerPort: 80
-#           name: http
-#           protocol: TCP
-#         resources:
-#           requests:
-#             memory: "128Mi"
-#             cpu: "100m"
-#           limits:
-#             memory: "256Mi"
-#             cpu: "200m"
-#         livenessProbe:
-#           httpGet:
-#             path: /health
-#             port: 80
-#           initialDelaySeconds: 30
-#           periodSeconds: 10
-#           timeoutSeconds: 5
-#           failureThreshold: 3
-#         readinessProbe:
-#           httpGet:
-#             path: /health
-#             port: 80
-#           initialDelaySeconds: 10
-#           periodSeconds: 5
-#           timeoutSeconds: 3
-#           failureThreshold: 3
-#         env:
-#         - name: NODE_ENV
-#           value: "production"
-#         volumeMounts:
-#         - name: nginx-config
-#           mountPath: /etc/nginx/conf.d/default.conf
-#           subPath: nginx.conf
-#       volumes:
-#       - name: nginx-config
-#         configMap:
-#           name: cloudcare-hospital-config
-#       restartPolicy: Always
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: cloudcare-hospital-frontend-service
-#   labels:
-#     app: cloudcare-hospital
-#     tier: frontend
-# spec:
-#   type: NodePort
-#   selector:
-#     app: cloudcare-hospital
-#     tier: frontend
-#   ports:
-#   - port: 80
-#     targetPort: 80
-#     nodePort: 30080
-#     protocol: TCP
-#     name: http
-#   sessionAffinity: None
 apiVersion: apps/v1
 kind: Deployment
 
@@ -158,6 +76,58 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
+  name: mysql
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: mysql
+
+  template:
+    metadata:
+      labels:
+        app: mysql
+
+    spec:
+      containers:
+        - name: mysql
+
+          image: mysql:8.0
+
+          ports:
+            - containerPort: 3306
+
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "rootpassword"
+
+            - name: MYSQL_DATABASE
+              value: "hospital_management"
+
+---
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: mysql
+
+spec:
+  selector:
+    app: mysql
+
+  ports:
+    - port: 3306
+      targetPort: 3306
+
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
   name: cloudcare-hospital-backend
   labels:
     app: cloudcare-hospital
@@ -194,16 +164,16 @@ spec:
             - name: PORT
               value: "5000"
 
-            - name: DB_HOST
-              value: "host.minikube.internal"
+            - name: MYSQL_HOST
+              value: "mysql"
 
-            - name: DB_USER
+            - name: MYSQL_USER
               value: "root"
 
-            - name: DB_PASSWORD
+            - name: MYSQL_PASSWORD
               value: "rootpassword"
 
-            - name: DB_NAME
+            - name: MYSQL_DB
               value: "hospital_management"
 
             - name: NODE_ENV
@@ -229,7 +199,7 @@ metadata:
     tier: backend
 
 spec:
-  type: ClusterIP
+  type: NodePort
 
   selector:
     app: cloudcare-hospital
@@ -238,5 +208,6 @@ spec:
   ports:
     - port: 5000
       targetPort: 5000
+      nodePort: 30050
       protocol: TCP
       name: http
