@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/database.js';
+import seedDB from './seed.js';
 
 dotenv.config();
 
@@ -17,10 +18,20 @@ app.use(express.urlencoded({ extended: true }));
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log(`✅ MySQL connected: ${process.env.MYSQL_HOST || 'localhost'}`);
+
+    console.log(`✅ MySQL connected: ${process.env.DB_HOST || 'localhost'}`);
+
     // Sync models
-    await sequelize.sync();    
+    await sequelize.sync();
+
     console.log('✅ MySQL Models synced');
+
+    // Seed database only if enabled
+    if (process.env.SEED_DB === "true") {
+      await seedDB();
+      console.log('✅ Database Seeded');
+    }
+
   } catch (error) {
     console.error(`✗ MySQL connection error: ${error.message}`);
     process.exit(1);
