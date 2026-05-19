@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/database.js';
-import seedDB from './seed.js';
 
 dotenv.config();
 
@@ -26,12 +25,6 @@ const connectDB = async () => {
 
     console.log('✅ MySQL Models synced');
 
-    // Seed database only if enabled
-    if (process.env.SEED_DB === "true") {
-      await seedDB();
-      console.log('✅ Database Seeded');
-    }
-
   } catch (error) {
     console.error(`✗ MySQL connection error: ${error.message}`);
     process.exit(1);
@@ -53,7 +46,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'Server is running', timestamp: new Date() });
+  res.json({ 
+    status: 'Server is running', 
+    timestamp: new Date() 
+  });
 });
 
 connectDB();
