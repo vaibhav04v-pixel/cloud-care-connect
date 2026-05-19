@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: mysql-seed-job
+
+spec:
+  template:
+    spec:
+      containers:
+        - name: seed
+
+          image: vaibhavvelumuri/careconnect_hospital-portel-backend:v1
+
+          command: ["node", "server/seed.js"]
+
+          env:
+            - name: DB_HOST
+              value: "mysql"
+
+            - name: DB_USER
+              value: "root"
+
+            - name: DB_PASSWORD
+              value: "rootpassword"
+
+            - name: DB_NAME
+              value: "hospital_management"
+
+      restartPolicy: Never
